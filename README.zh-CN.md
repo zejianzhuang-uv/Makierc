@@ -92,18 +92,71 @@ load_makie_config!(palette = (color = [:black, :red, :blue], patchcolor = [:gray
 
 ### 5. 选择字体
 
-默认字体是 CMU Serif。**请先把它安装到电脑上**：如果缺少这个字体，Makie 会改用另一种字体，并继续运行。要使用其他字体：
+默认字体是 Times New Roman。**电脑上必须装有这个字体**：如果缺少这个字体，Makie 会改用另一种字体，并继续运行。要使用其他字体：
 
 ```julia
-load_makie_config!(font_regular = "Times New Roman")
+load_makie_config!(font_regular = "CMU Serif")
 ```
 
 这里只设置常规字体。Makie 用粗体绘制的文字（例如图例标题）仍然使用 Makie 自带的粗体字体。
 
-### 6. 恢复 Makie 的默认样式
+### 6. 用 LaTeX 写数学公式
+
+在字符串前加 `L`，就可以按 LaTeX 书写。不需要安装 LaTeX：
+
+```julia
+using CairoMakie, Makierc
+
+load_makie_config!()
+
+x = range(0, 2π, 200)
+fig = Figure()
+ax = Axis(fig[1, 1];
+    xlabel = L"\sqrt{s}\;[\mathrm{MeV}]",
+    ylabel = L"|T(s)|^2",
+    title = "A figure with math",
+)
+lines!(ax, x, sin.(x) .^ 2; label = L"\alpha\,\sin^2\theta")
+lines!(ax, x, cos.(x) .^ 2; label = L"\beta\,\cos^2\theta")
+axislegend(ax)
+fig
+```
+
+一张图用到两种字体，分别由各自的关键字参数设置：
+
+| 文字 | 示例 | 关键字 | 默认值 |
+|---|---|---|---|
+| 普通文字和刻度标签 | `"A figure with math"` | `font_regular` | `"Times New Roman"` |
+| LaTeX 文字 | `L"\alpha\,\sin^2\theta"` | `font_latex` | `"STIX"` |
+
+默认值 `"STIX"` 的效果接近 matplotlib 的 `mathtext.fontset: stix`。字体文件已包含在 Makierc 中，不需要另外安装。要给 LaTeX 文字换一种字体，传入字体名称即可：
+
+```julia
+load_makie_config!(font_latex = "NewComputerModern")
+```
+
+可用的名称有 `"STIX"`、`"NewComputerModern"`（Makie 的默认字体）、`"TeXGyrePagella"`、`"TeXGyreHeros"` 和 `"LucioleMath"`。请在创建图形之前调用 `load_makie_config!`。
+
+要使用自己的字体文件，请传入一个带完整路径的 `FontFamily`。没有指定的字形样式会使用 NewComputerModern：
+
+```julia
+family = Makie.MathTeXEngine.FontFamily(Dict(
+    :regular => "/path/to/MyFont-Regular.otf",
+    :italic => "/path/to/MyFont-Italic.otf",
+    :bold => "/path/to/MyFont-Bold.otf",
+    :bolditalic => "/path/to/MyFont-BoldItalic.otf",
+    :math => "/path/to/MyFontMath.otf",
+))
+load_makie_config!(font_latex = family)
+```
+
+字体与 matplotlib 一致，但排版由 Makie 完成，所以图形不会完全相同。例如，`\frac` 比 matplotlib 中的大；在 `\sum_{n=0}^{\infty} \int_0^1` 中，积分的下限离求和的下限太近。要并排对比，请打开 [`test/latex_font.ipynb`](test/latex_font.ipynb)。
+
+### 7. 恢复 Makie 的默认样式
 
 ```julia
 set_theme!()
+Makie.MathTeXEngine.set_texfont_family!()  # LaTeX 字体：set_theme! 不会重置它
 ```
 
 ## 所有设置
@@ -114,7 +167,8 @@ set_theme!()
 |---|---|---|
 | 线条 | `lw`（用于 `Lines`、`Errorbars` 和 `VLines`） | `1.8` |
 | 字体 | `fontsize` | `16` |
-| | `font_regular` | `"CMU Serif"` |
+| | `font_regular` | `"Times New Roman"` |
+| | `font_latex` | `"STIX"` |
 | 标记 | `markersize` | `15` |
 | 网格 | `xgridstyle`、`ygridstyle` | `Linestyle([0, 3.7, 5.3])` |
 | | `xgridcolor`、`ygridcolor` | `"#b0b0b0"` |

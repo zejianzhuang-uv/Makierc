@@ -27,6 +27,49 @@ const MPL_PALETTE = (color = Makie.to_color.(MPL_CYCLE), patchcolor = Makie.to_c
 
 const GRID_STYLE = Linestyle([0, 3.7, 5.3])
 
+const STIX_DIR = ("assets", "fonts", "STIX")
+
+# Characters that matplotlib's stix fontset draws in italic, but MathTeXEngine takes from the
+# upright :math font.
+const STIX_ITALIC_CHARS = ['α':'ω'..., 'ϕ', 'ϵ', 'ϑ', 'ϰ', 'ϱ', 'ϖ', 'ħ']
+
+"""
+A `FontFamily` that looks like matplotlib's `mathtext.fontset = "stix"`: italic lowercase
+Greek letters and an upright `\\mathbf`. The fonts are the ones matplotlib ships.
+"""
+function stix_font_family()
+    MTE = Makie.MathTeXEngine
+    font(name) = joinpath(pkgdir(@__MODULE__), STIX_DIR..., name)
+    italic = font("STIXGeneralItalic.ttf")
+    italic_font = MTE.load_font(italic)
+    return MTE.FontFamily(
+        Dict(
+            :regular => font("STIXGeneral.ttf"),
+            :italic => italic,
+            :bold => font("STIXGeneralBol.ttf"),
+            :bolditalic => font("STIXGeneralBolIta.ttf"),
+            :math => font("STIXGeneral.ttf"),
+        );
+        font_modifiers = merge(
+            MTE._default_font_modifiers,
+            Dict(:bf => Dict(:italic => :bold, :regular => :bold)),
+        ),
+        special_chars = Dict{Char, Tuple{String, Int}}(
+            c => (italic, MTE.glyph_index(italic_font, c)) for c in STIX_ITALIC_CHARS
+        ),
+    )
+end
+
+latex_font_family(family::Makie.MathTeXEngine.FontFamily) = family
+function latex_font_family(name::AbstractString)
+    name == "STIX" && return stix_font_family()
+    families = Makie.MathTeXEngine.default_font_families
+    haskey(families, name) || throw(ArgumentError(
+        "unknown font_latex \"$name\", choose one of $(sort!(["STIX"; collect(keys(families))]))",
+    ))
+    return families[name]
+end
+
 """
     load_makie_config!(; kwargs...)
 
@@ -44,6 +87,10 @@ load_makie_config!(palette = Makierc.MPL_PALETTE, figure_padding = 15)
 
 - Lines: `lw` (`Lines`, `Errorbars` and `VLines` line width, in points)
 - Font: `fontsize`, `font_regular`
+- LaTeX font: `font_latex`, for `L"..."` text. `"STIX"` looks like matplotlib's
+  `mathtext.fontset = "stix"`. Other names: `"NewComputerModern"`, `"TeXGyrePagella"`,
+  `"TeXGyreHeros"`, `"LucioleMath"`. You can also pass a `MathTeXEngine.FontFamily`.
+  Makie keeps this font in a global setting, so `set_theme!()` does not reset it.
 - Markers: `markersize`
 - Grid: `xgridstyle`, `xgridcolor`, `xgridwidth`, `ygridstyle`, `ygridcolor`, `ygridwidth`
 - Tick count: `k_ideal`, `k_min`, `k_max` (Wilkinson tick target and limits, on both axes)
@@ -57,7 +104,8 @@ function load_makie_config!(;
     lw = 1.8,
     # Font
     fontsize = 16,
-    font_regular = "CMU Serif",
+    font_regular = "Times New Roman",
+    font_latex = "STIX",
     markersize = 15,
     # Grid
     xgridstyle = GRID_STYLE,
@@ -127,6 +175,7 @@ function load_makie_config!(;
     )
     isnothing(figure_padding) || (theme[:figure_padding] = figure_padding)
     isnothing(palette) || (theme[:palette] = palette)
+    Makie.MathTeXEngine.set_texfont_family!(latex_font_family(font_latex))
     return set_theme!(theme)
 end
 

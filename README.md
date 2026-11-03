@@ -98,20 +98,79 @@ load_makie_config!(palette = (color = [:black, :red, :blue], patchcolor = [:gray
 
 ### 5. Choose a font
 
-The default font is CMU Serif. **Install it on your computer first**: if it is missing, Makie
-picks another font without stopping. To use a different font:
+The default font is Times New Roman. **It must be installed on your computer**: if it is missing,
+Makie picks another font without stopping. To use a different font:
 
 ```julia
-load_makie_config!(font_regular = "Times New Roman")
+load_makie_config!(font_regular = "CMU Serif")
 ```
 
 This sets the regular font only. Text that Makie draws in bold, such as a legend title, still
 uses Makie's own bold font.
 
-### 6. Go back to Makie's default style
+### 6. Write math with LaTeX
+
+Put an `L` in front of a string to write it as LaTeX. You do not need to install LaTeX:
+
+```julia
+using CairoMakie, Makierc
+
+load_makie_config!()
+
+x = range(0, 2π, 200)
+fig = Figure()
+ax = Axis(fig[1, 1];
+    xlabel = L"\sqrt{s}\;[\mathrm{MeV}]",
+    ylabel = L"|T(s)|^2",
+    title = "A figure with math",
+)
+lines!(ax, x, sin.(x) .^ 2; label = L"\alpha\,\sin^2\theta")
+lines!(ax, x, cos.(x) .^ 2; label = L"\beta\,\cos^2\theta")
+axislegend(ax)
+fig
+```
+
+A figure uses two fonts, and each one has its own keyword:
+
+| Text | Example | Keyword | Default |
+|---|---|---|---|
+| Normal text and tick labels | `"A figure with math"` | `font_regular` | `"Times New Roman"` |
+| LaTeX text | `L"\alpha\,\sin^2\theta"` | `font_latex` | `"STIX"` |
+
+The default, `"STIX"`, looks like matplotlib's `mathtext.fontset: stix`. Its font files come with
+Makierc, so you do not need to install them. To use a different font for LaTeX text, pass its name:
+
+```julia
+load_makie_config!(font_latex = "NewComputerModern")
+```
+
+The names you can use are `"STIX"`, `"NewComputerModern"` (Makie's default), `"TeXGyrePagella"`,
+`"TeXGyreHeros"` and `"LucioleMath"`. Call `load_makie_config!` before you create the figure.
+
+To use your own font files, pass a `FontFamily` with their full paths. Any style you leave out
+comes from NewComputerModern:
+
+```julia
+family = Makie.MathTeXEngine.FontFamily(Dict(
+    :regular => "/path/to/MyFont-Regular.otf",
+    :italic => "/path/to/MyFont-Italic.otf",
+    :bold => "/path/to/MyFont-Bold.otf",
+    :bolditalic => "/path/to/MyFont-BoldItalic.otf",
+    :math => "/path/to/MyFontMath.otf",
+))
+load_makie_config!(font_latex = family)
+```
+
+The fonts match matplotlib, but the layout comes from Makie, so a figure is not identical. For
+example, `\frac` is larger than in matplotlib. In `\sum_{n=0}^{\infty} \int_0^1`, the lower limit of
+the integral sits too close to the limit of the sum. To see the two side by side, open
+[`test/latex_font.ipynb`](test/latex_font.ipynb).
+
+### 7. Go back to Makie's default style
 
 ```julia
 set_theme!()
+Makie.MathTeXEngine.set_texfont_family!()  # LaTeX font: set_theme! does not reset it
 ```
 
 ## All settings
@@ -123,7 +182,8 @@ with `?load_makie_config!`.
 |---|---|---|
 | Lines | `lw` (for `Lines`, `Errorbars` and `VLines`) | `1.8` |
 | Font | `fontsize` | `16` |
-| | `font_regular` | `"CMU Serif"` |
+| | `font_regular` | `"Times New Roman"` |
+| | `font_latex` | `"STIX"` |
 | Markers | `markersize` | `15` |
 | Grid | `xgridstyle`, `ygridstyle` | `Linestyle([0, 3.7, 5.3])` |
 | | `xgridcolor`, `ygridcolor` | `"#b0b0b0"` |
