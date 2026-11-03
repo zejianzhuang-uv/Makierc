@@ -4,6 +4,8 @@
 
 Makierc 为 [Makie](https://docs.makie.org/stable/) 提供一套现成的绘图样式。只需调用一个函数，图就会有四边朝内的刻度、虚线网格、衬线字体和简洁的图例。样式的任何部分都可以用关键字参数修改。
 
+刚接触 Makie？它是 Julia 中快速、现代的绘图库，非常值得一试。同一份绘图代码可以用于多个后端：CairoMakie 用来生成达到出版质量的 PDF 和 SVG 文件，GLMakie 借助 GPU 提供流畅的 2D 和 3D 交互绘图，WGLMakie 则可以在浏览器中交互绘图。它的布局系统让子图、图例和颜色条很容易对齐，而且不需要安装 LaTeX 就能绘制 LaTeX 标签。可以从 [Makie 官方文档](https://docs.makie.org/stable/)开始了解。
+
 ## 安装
 
 ```julia

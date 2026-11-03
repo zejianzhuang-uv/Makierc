@@ -6,6 +6,13 @@ A ready-made plot style for [Makie](https://docs.makie.org/stable/). Call one fu
 get inward ticks on all four sides, dashed grid lines, a serif font and a clean legend. You can
 change any part of the style with a keyword.
 
+New to Makie? It is a fast, modern plotting library for Julia, and it is well worth trying. The
+same plotting code works with several backends: CairoMakie for publication-quality PDF and SVG
+files, GLMakie for fast, interactive 2D and 3D plots on your GPU, and WGLMakie for interactive
+plots in the browser. Its layout system makes it easy to line up subplots, legends and colorbars,
+and it draws LaTeX labels without a LaTeX installation. The
+[Makie documentation](https://docs.makie.org/stable/) is a great place to start.
+
 ## Installation
 
 ```julia
