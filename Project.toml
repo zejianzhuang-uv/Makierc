@@ -1,0 +1,16 @@
+name = "Makierc"
+uuid = "bb99d6b5-8312-4a68-a88b-7d9bf4c5e89f"
+version = "0.1.0"
+authors = ["zejianzhuang-uv <zejian.zhuang@uv.es>"]
+
+[deps]
+Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+
+[compat]
+Makie = "0.24.15"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
