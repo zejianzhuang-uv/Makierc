@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-Makierc 为 [Makie](https://docs.makie.org) ([GitHub](https://github.com/MakieOrg/Makie.jl)) 提供一套现成的绘图样式。只需调用一个函数，图就会有四边朝内的刻度、虚线网格、衬线字体和简洁的图例。样式的任何部分都可以用关键字参数修改。
+Makierc 为 [Makie](https://docs.makie.org/stable/) 提供一套现成的绘图样式。只需调用一个函数，图就会有四边朝内的刻度、虚线网格、衬线字体和简洁的图例。样式的任何部分都可以用关键字参数修改。
 
 ## 安装
 
