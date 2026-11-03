@@ -92,7 +92,8 @@ load_makie_config!(palette = Makierc.MPL_PALETTE, figure_padding = 15)
   `"TeXGyreHeros"`, `"LucioleMath"`. You can also pass a `MathTeXEngine.FontFamily`.
   Makie keeps this font in a global setting, so `set_theme!()` does not reset it.
 - Markers: `markersize`
-- Grid: `xgridstyle`, `xgridcolor`, `xgridwidth`, `ygridstyle`, `ygridcolor`, `ygridwidth`
+- Grid: `grid` (`false` turns off every grid), `xgridstyle`, `xgridcolor`, `xgridwidth`,
+  `ygridstyle`, `ygridcolor`, `ygridwidth`
 - Tick count: `k_ideal`, `k_min`, `k_max` (Wilkinson tick target and limits, on both axes)
 - Ticks: `xtickalign`, `xminortickalign`, `xticksmirrored`, `xminorticksvisible`, `xminorticks`,
   and the same for `y`
@@ -108,6 +109,7 @@ function load_makie_config!(;
     font_latex = "STIX",
     markersize = 15,
     # Grid
+    grid = true,
     xgridstyle = GRID_STYLE,
     xgridcolor = "#b0b0b0",
     xgridwidth = 0.8,
@@ -143,6 +145,8 @@ function load_makie_config!(;
             # Title
             titlefont = :regular,
             # Grid
+            xgridvisible = grid,
+            ygridvisible = grid,
             xgridstyle = xgridstyle,
             xgridcolor = xgridcolor,
             xgridwidth = xgridwidth,
@@ -163,6 +167,8 @@ function load_makie_config!(;
             yminorticks = yminorticks,
             yminorticksvisible = yminorticksvisible,
         ),
+        Axis3 = (xgridvisible = grid, ygridvisible = grid, zgridvisible = grid),
+        PolarAxis = (rgridvisible = grid, thetagridvisible = grid),
         Scatter = (markersize = markersize,),
         Errorbars = (linewidth = lw,),
         VLines = (linewidth = lw,),

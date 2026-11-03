@@ -74,6 +74,12 @@ load_makie_config!(lw = 2.5)
 load_makie_config!(fontsize = 18)
 ```
 
+要绘制没有网格线的图形，请使用 `grid = false`：
+
+```julia
+load_makie_config!(grid = false)
+```
+
 关键字拼写错误时会报 `MethodError`，所以拼写错误不会被悄悄忽略。
 
 ### 4. 使用可选的颜色和边距
@@ -170,7 +176,8 @@ Makie.MathTeXEngine.set_texfont_family!()  # LaTeX 字体：set_theme! 不会重
 | | `font_regular` | `"Times New Roman"` |
 | | `font_latex` | `"STIX"` |
 | 标记 | `markersize` | `15` |
-| 网格 | `xgridstyle`、`ygridstyle` | `Linestyle([0, 3.7, 5.3])` |
+| 网格 | `grid`（`false` 表示关闭所有网格） | `true` |
+| | `xgridstyle`、`ygridstyle` | `Linestyle([0, 3.7, 5.3])` |
 | | `xgridcolor`、`ygridcolor` | `"#b0b0b0"` |
 | | `xgridwidth`、`ygridwidth` | `0.8` |
 | 刻度数量 | `k_ideal`、`k_min`、`k_max` | `5`、`4`、`10` |

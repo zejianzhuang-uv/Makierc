@@ -79,6 +79,12 @@ load_makie_config!(lw = 2.5)
 load_makie_config!(fontsize = 18)
 ```
 
+To draw figures without grid lines, use `grid = false`:
+
+```julia
+load_makie_config!(grid = false)
+```
+
 A misspelled keyword raises a `MethodError`, so a typo cannot silently do nothing.
 
 ### 4. Use the optional colours and padding
@@ -185,7 +191,8 @@ with `?load_makie_config!`.
 | | `font_regular` | `"Times New Roman"` |
 | | `font_latex` | `"STIX"` |
 | Markers | `markersize` | `15` |
-| Grid | `xgridstyle`, `ygridstyle` | `Linestyle([0, 3.7, 5.3])` |
+| Grid | `grid` (`false` turns off every grid) | `true` |
+| | `xgridstyle`, `ygridstyle` | `Linestyle([0, 3.7, 5.3])` |
 | | `xgridcolor`, `ygridcolor` | `"#b0b0b0"` |
 | | `xgridwidth`, `ygridwidth` | `0.8` |
 | Tick count | `k_ideal`, `k_min`, `k_max` | `5`, `4`, `10` |

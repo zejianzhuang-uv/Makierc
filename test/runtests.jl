@@ -92,6 +92,42 @@ current(key) = to_value(Makie.current_default_theme()[key])
         end
     end
 
+    @testset "grid" begin
+        function grid_flags()
+            fig = Figure()
+            ax = Axis(fig[1, 1])
+            ax3 = Axis3(fig[1, 2])
+            polar = PolarAxis(fig[1, 3])
+            return (
+                ax.xgridvisible[], ax.ygridvisible[], ax.xminorgridvisible[], ax.yminorgridvisible[],
+                ax3.xgridvisible[], ax3.ygridvisible[], ax3.zgridvisible[],
+                polar.rgridvisible[], polar.thetagridvisible[],
+                polar.rminorgridvisible[], polar.thetaminorgridvisible[],
+            )
+        end
+
+        @testset "grid = false turns off every grid" begin
+            load_makie_config!(grid = false)
+            @test !any(grid_flags())
+        end
+
+        @testset "the default keeps the major grids on" begin
+            load_makie_config!()
+            @test grid_flags() == (
+                true, true, false, false,
+                true, true, true,
+                true, true, false, false,
+            )
+        end
+
+        @testset "a new call turns the grid on again" begin
+            load_makie_config!(grid = false)
+            load_makie_config!()
+            fig = Figure()
+            @test Axis(fig[1, 1]).xgridvisible[] == true
+        end
+    end
+
     @testset "misspelled keywords raise an error" begin
         @test_throws MethodError load_makie_config!(linewidth_typo = 2)
     end
