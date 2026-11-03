@@ -1,5 +1,7 @@
 # Makierc
 
+English | [中文](README.zh-CN.md)
+
 A ready-made plot style for [Makie](https://docs.makie.org). Call one function and your figures
 get inward ticks on all four sides, dashed grid lines, a serif font and a clean legend. You can
 change any part of the style with a keyword.
