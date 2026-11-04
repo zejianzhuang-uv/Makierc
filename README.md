@@ -86,10 +86,11 @@ load_makie_config!(lw = 2.5)
 load_makie_config!(fontsize = 18)
 ```
 
-To draw figures without grid lines, use `grid = false`:
+To draw figures without grid lines, use `grid = false`. To remove the minor ticks on both axes, use
+`minorticks = false`:
 
 ```julia
-load_makie_config!(grid = false)
+load_makie_config!(grid = false, minorticks = false)
 ```
 
 A misspelled keyword raises a `MethodError`, so a typo cannot silently do nothing.
@@ -206,6 +207,7 @@ with `?load_makie_config!`.
 | Ticks | `xtickalign`, `ytickalign` | `1` |
 | | `xminortickalign`, `yminortickalign` | `1` |
 | | `xticksmirrored`, `yticksmirrored` | `true` |
+| | `minorticks` (`false` turns off the minor ticks on both axes) | `true` |
 | | `xminorticksvisible`, `yminorticksvisible` | `true` |
 | | `xminorticks`, `yminorticks` | `IntervalsBetween(5)` |
 | Legend | `legend_backgroundcolor` | `(:white, 0.6)` |

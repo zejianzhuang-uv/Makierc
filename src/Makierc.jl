@@ -95,6 +95,8 @@ load_makie_config!(palette = Makierc.MPL_PALETTE, figure_padding = 15)
 - Grid: `grid` (`false` turns off every grid), `xgridstyle`, `xgridcolor`, `xgridwidth`,
   `ygridstyle`, `ygridcolor`, `ygridwidth`
 - Tick count: `k_ideal`, `k_min`, `k_max` (Wilkinson tick target and limits, on both axes)
+- Minor ticks: `minorticks` (`false` turns off the minor ticks on both axes, whatever
+  `xminorticksvisible` and `yminorticksvisible` say)
 - Ticks: `xtickalign`, `xminortickalign`, `xticksmirrored`, `xminorticksvisible`, `xminorticks`,
   and the same for `y`
 - Legend: `legend_backgroundcolor`, `legend_framecolor`, `legend_framewidth`
@@ -117,6 +119,7 @@ function load_makie_config!(;
     ygridcolor = "#b0b0b0",
     ygridwidth = 0.8,
     # Ticks, see https://github.com/MakieOrg/Makie.jl/issues/1678
+    minorticks = true,
     k_ideal = 5,
     k_min = 4,
     k_max = 10,
@@ -160,12 +163,12 @@ function load_makie_config!(;
             xminortickalign = xminortickalign,
             xticksmirrored = xticksmirrored,
             xminorticks = xminorticks,
-            xminorticksvisible = xminorticksvisible,
+            xminorticksvisible = minorticks && xminorticksvisible,
             ytickalign = ytickalign,
             yminortickalign = yminortickalign,
             yticksmirrored = yticksmirrored,
             yminorticks = yminorticks,
-            yminorticksvisible = yminorticksvisible,
+            yminorticksvisible = minorticks && yminorticksvisible,
         ),
         Axis3 = (xgridvisible = grid, ygridvisible = grid, zgridvisible = grid),
         PolarAxis = (rgridvisible = grid, thetagridvisible = grid),

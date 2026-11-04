@@ -128,6 +128,40 @@ current(key) = to_value(Makie.current_default_theme()[key])
         end
     end
 
+    @testset "minorticks" begin
+        function minor_flags()
+            ax = Axis(Figure()[1, 1])
+            return (ax.xminorticksvisible[], ax.yminorticksvisible[])
+        end
+
+        @testset "minorticks = false turns off the minor ticks on both axes" begin
+            load_makie_config!(minorticks = false)
+            @test minor_flags() == (false, false)
+        end
+
+        @testset "minorticks = false wins over the per-axis keywords" begin
+            load_makie_config!(minorticks = false, xminorticksvisible = true)
+            @test minor_flags() == (false, false)
+        end
+
+        @testset "the default keeps the minor ticks on" begin
+            load_makie_config!()
+            @test minor_flags() == (true, true)
+        end
+
+        @testset "a per-axis keyword still works on its own" begin
+            load_makie_config!(xminorticksvisible = false)
+            @test minor_flags() == (false, true)
+        end
+
+        @testset "major ticks stay on" begin
+            load_makie_config!(minorticks = false)
+            ax = Axis(Figure()[1, 1])
+            @test ax.xticksvisible[] == true
+            @test ax.yticksvisible[] == true
+        end
+    end
+
     @testset "misspelled keywords raise an error" begin
         @test_throws MethodError load_makie_config!(linewidth_typo = 2)
     end

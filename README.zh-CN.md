@@ -76,10 +76,10 @@ load_makie_config!(lw = 2.5)
 load_makie_config!(fontsize = 18)
 ```
 
-要绘制没有网格线的图形，请使用 `grid = false`：
+要绘制没有网格线的图形，请使用 `grid = false`。要去掉两个方向的次刻度线，请使用 `minorticks = false`：
 
 ```julia
-load_makie_config!(grid = false)
+load_makie_config!(grid = false, minorticks = false)
 ```
 
 关键字拼写错误时会报 `MethodError`，所以拼写错误不会被悄悄忽略。
@@ -186,6 +186,7 @@ Makie.MathTeXEngine.set_texfont_family!()  # LaTeX 字体：set_theme! 不会重
 | 刻度 | `xtickalign`、`ytickalign` | `1` |
 | | `xminortickalign`、`yminortickalign` | `1` |
 | | `xticksmirrored`、`yticksmirrored` | `true` |
+| | `minorticks`（`false` 表示关闭两个方向的次刻度线） | `true` |
 | | `xminorticksvisible`、`yminorticksvisible` | `true` |
 | | `xminorticks`、`yminorticks` | `IntervalsBetween(5)` |
 | 图例 | `legend_backgroundcolor` | `(:white, 0.6)` |
