@@ -73,34 +73,85 @@ end
 """
     load_makie_config!(; kwargs...)
 
-Apply the Makierc plot style as the current Makie theme. Every setting has a default, so
-`load_makie_config!()` gives the standard style. Each call starts again from the defaults:
-overrides from an earlier call are not remembered.
+Apply the Makierc plot style as the current Makie theme. Call it before you create a `Figure`:
+the style applies only to figures created after the call.
+
+Every keyword has a default, so `load_makie_config!()` gives the standard style. Each call starts
+again from the defaults: overrides from an earlier call are not remembered. A misspelled keyword
+raises a `MethodError`.
+
+# Examples
 
 ```julia
 load_makie_config!()
 load_makie_config!(lw = 2.5, fontsize = 18)
+load_makie_config!(grid = false, minorticks = false)
+load_makie_config!(font_latex = "NewComputerModern")
 load_makie_config!(palette = Makierc.MPL_PALETTE, figure_padding = 15)
 ```
 
 # Keywords
 
-- Lines: `lw` (`Lines`, `Errorbars` and `VLines` line width, in points)
-- Font: `fontsize`, `font_regular`
-- LaTeX font: `font_latex`, for `L"..."` text. `"STIX"` looks like matplotlib's
-  `mathtext.fontset = "stix"`. Other names: `"NewComputerModern"`, `"TeXGyrePagella"`,
-  `"TeXGyreHeros"`, `"LucioleMath"`. You can also pass a `MathTeXEngine.FontFamily`.
-  Makie keeps this font in a global setting, so `set_theme!()` does not reset it.
-- Markers: `markersize`
-- Grid: `grid` (`false` turns off every grid), `xgridstyle`, `xgridcolor`, `xgridwidth`,
-  `ygridstyle`, `ygridcolor`, `ygridwidth`
-- Tick count: `k_ideal`, `k_min`, `k_max` (Wilkinson tick target and limits, on both axes)
-- Minor ticks: `minorticks` (`false` turns off the minor ticks on both axes, whatever
-  `xminorticksvisible` and `yminorticksvisible` say)
-- Ticks: `xtickalign`, `xminortickalign`, `xticksmirrored`, `xminorticksvisible`, `xminorticks`,
-  and the same for `y`
-- Legend: `legend_backgroundcolor`, `legend_framecolor`, `legend_framewidth`
-- Figure: `figure_padding`, `palette` (`nothing` keeps Makie's default)
+## Lines and markers
+
+| Keyword | Default | Meaning |
+|:--------|:--------|:--------|
+| `lw` | `1.8` | Line width of `Lines`, `Errorbars` and `VLines`, in points |
+| `markersize` | `15` | Marker size of `Scatter` |
+
+## Fonts
+
+| Keyword | Default | Meaning |
+|:--------|:--------|:--------|
+| `fontsize` | `16` | Font size of all text |
+| `font_regular` | `"Times New Roman"` | Font of normal text and tick labels; it must be installed |
+| `font_latex` | `"STIX"` | Font of `L"..."` text, see below |
+
+`font_latex` is one of these names, or a `MathTeXEngine.FontFamily` made from your own font files:
+
+- `"STIX"`: looks like matplotlib's `mathtext.fontset: stix`; the fonts come with Makierc
+- `"NewComputerModern"`: Makie's default
+- `"TeXGyrePagella"`, `"TeXGyreHeros"`, `"LucioleMath"`
+
+Makie keeps this font in a global setting, so `set_theme!()` does not reset it. To reset it, call
+`Makie.MathTeXEngine.set_texfont_family!()`.
+
+## Grid
+
+| Keyword | Default | Meaning |
+|:--------|:--------|:--------|
+| `grid` | `true` | `false` turns off the grids of `Axis`, `Axis3` and `PolarAxis` |
+| `xgridstyle`, `ygridstyle` | `Linestyle([0, 3.7, 5.3])` | Dash pattern of the grid lines |
+| `xgridcolor`, `ygridcolor` | `"#b0b0b0"` | Colour of the grid lines |
+| `xgridwidth`, `ygridwidth` | `0.8` | Width of the grid lines |
+
+## Ticks
+
+| Keyword | Default | Meaning |
+|:--------|:--------|:--------|
+| `k_ideal` | `5` | Number of major ticks to aim for, on both axes |
+| `k_min`, `k_max` | `4`, `10` | Smallest and largest number of major ticks, on both axes |
+| `xtickalign`, `ytickalign` | `1` | Major tick direction: `1` is inward, `0` is outward |
+| `xticksmirrored`, `yticksmirrored` | `true` | Also draw ticks on the opposite side |
+| `minorticks` | `true` | `false` turns off all minor ticks and overrides the keywords below |
+| `xminorticksvisible`, `yminorticksvisible` | `true` | Show the minor ticks of one axis |
+| `xminortickalign`, `yminortickalign` | `1` | Minor tick direction: `1` is inward, `0` is outward |
+| `xminorticks`, `yminorticks` | `IntervalsBetween(5)` | Position of the minor ticks |
+
+## Legend
+
+| Keyword | Default | Meaning |
+|:--------|:--------|:--------|
+| `legend_backgroundcolor` | `(:white, 0.6)` | Background colour |
+| `legend_framecolor` | `(:black, 0.3)` | Frame colour |
+| `legend_framewidth` | `1.5` | Frame width |
+
+## Figure
+
+| Keyword | Default | Meaning |
+|:--------|:--------|:--------|
+| `figure_padding` | `nothing` | Padding around the figure; `nothing` keeps Makie's default |
+| `palette` | `nothing` | Colours; `nothing` keeps Makie's default, or use `Makierc.MPL_PALETTE` |
 """
 function load_makie_config!(;
     # Lines
